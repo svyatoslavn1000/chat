@@ -1,7 +1,9 @@
 package ru.geekbrains.server;
+import java.io.Serializable;
 
-public class UserMessage {
+public class UserMessage implements Serializable {
     private String nick;
+
     private String message;
 
     public UserMessage() {
