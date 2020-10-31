@@ -1,0 +1,45 @@
+#btn1 {
+    -fx-background-color: blue;
+    -fx-text-fill: white;
+}
+
+#btn1:hover {
+    -fx-background-color: aqua;
+    -fx-text-fill: black;
+}
+
+#listView {
+    -fx-background-image: url("/img/background_light.jpg");
+}
+
+.list-cell {
+    -fx-background-color: null;
+}
+
+.chat-bubble {
+    -fx-font-weight: bold;
+    -fx-position: absolute;
+    -fx-background-color: yellow;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: null;
+    -fx-text-alignment: center;
+    -fx-padding: 10px;
+}
+
+.chat-bubble1 {
+    -fx-font-weight: bold;
+    -fx-position: absolute;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+    -fx-border-radius: null;
+    -fx-text-alignment: center;
+    -fx-padding: 10px;
+}
+
+
+
+
+
+

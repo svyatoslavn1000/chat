@@ -1,0 +1,39 @@
+<?scenebuilder-stylesheet /css/styles.css?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import java.net.URL?>
+<?import javafx.scene.control.PasswordField?>
+<VBox fx:controller="ru.geekbrains.client.Controller"
+      xmlns:fx="http://javafx.com/fxml" alignment="CENTER">
+    <stylesheets>
+        <URL value="@/css/styles.css"/>
+    </stylesheets>
+    <HBox fx:id="upperPanel">
+        <VBox>
+        <TextField HBox.hgrow="ALWAYS" promptText="Логин" fx:id="loginField"/>
+        <PasswordField promptText="Пароль" fx:id="passwordField" onAction="#tryToAuth"/>
+        <Button text="Авторизация" onAction="#tryToAuth"/>
+        </VBox>
+        <VBox>
+            <TextField HBox.hgrow="ALWAYS" promptText="Логин" fx:id="loginFieldReg"/>
+            <PasswordField promptText="Пароль" fx:id="passwordFieldReg1" />
+            <PasswordField promptText="Подтвердить" fx:id="passwordFieldReg2" />
+            <TextField HBox.hgrow="ALWAYS" promptText="Никнейм" fx:id="nickFieldReg"/>
+            <Button text="Регистрация" onAction="#tryToReg"/>
+        </VBox>
+    </HBox>
+<HBox VBox.vgrow="ALWAYS">
+    <VBox HBox.hgrow="ALWAYS">
+        <ListView fx:id="listView" VBox.vgrow="ALWAYS"/>
+        <HBox fx:id="bottomPanel" managed="false" visible="false">
+            <TextField fx:id="textField" HBox.hgrow="ALWAYS" promptText="введите сообщение..." onAction="#sendMsg"/>
+            <Button fx:id="buttonSubmit" text="Send" onAction="#sendMsg"/>
+        </HBox>
+    </VBox>
+
+    <ListView fx:id ="clientsList"  onMouseClicked="#selectClient" prefWidth="100"> </ListView>
+</HBox>
+</VBox>
