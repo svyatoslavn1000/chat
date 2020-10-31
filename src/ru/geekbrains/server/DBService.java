@@ -4,7 +4,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AuthService {
+public class DBService {
 
     private static Connection connection;
     private static Statement stmt;
@@ -74,6 +74,7 @@ public class AuthService {
         while (rs.next()){
             nicks.add(rs.getString(1));
         }
+        pr.close();
         return nicks;
     }
 

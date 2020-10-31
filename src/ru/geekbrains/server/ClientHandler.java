@@ -15,7 +15,7 @@ public class ClientHandler {
     Server server;
     String nick;
     ArrayList<String> blacklist;
-    AuthService authService;
+    DBService DBService;
 
     public String getNick() {
         return nick;
@@ -27,7 +27,7 @@ public class ClientHandler {
             this.socket = socket;
             this.in = new DataInputStream(socket.getInputStream());
             this.out = new DataOutputStream(socket.getOutputStream());
-            this.authService = new AuthService();
+            this.DBService = new DBService();
             this.blacklist = new ArrayList<>();
 
             Thread thread = new Thread(() -> {
@@ -40,19 +40,19 @@ public class ClientHandler {
                                 System.out.println(tokens[3]);
                                 sendMsg("Ник "  + tokens[3] + " уже используется" );
                             }else{
-                            AuthService.addUser(tokens[1],tokens[2],tokens[3]);
+                            DBService.addUser(tokens[1],tokens[2],tokens[3]);
                             sendMsg("Регистрация прошла успешно");}
                         }
                         if (str.startsWith("/auth")) {
                             String[] tokens = str.split(" ");
-                            String newNick = AuthService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                            String newNick = DBService.getNickByLoginAndPass(tokens[1], tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickUsed(newNick)) {
                                     sendMsg("/authok" + " " + newNick);
                                     nick = newNick;
                                     server.subscribe(ClientHandler.this);
                                     server.broadcastMsg(ClientHandler.this, "Пользователь " + nick + " вошел в чат");
-                                    List<UserMessage> messages = authService.getAllMessages();
+                                    List<UserMessage> messages = DBService.getAllMessages();
                                     for(UserMessage o: messages){
                                         sendMsg(o.getNick() + " : " + o.getMessage());
                                         System.out.println(o.getNick() + " : " + o.getMessage());
@@ -84,7 +84,7 @@ public class ClientHandler {
                             }
                         } else {
                             server.broadcastMsg(ClientHandler.this, nick + " : " + str);
-                            AuthService.addMsg(nick, str);
+                            DBService.addMsg(nick, str);
                         }
                     }
                 } catch (IOException | SQLException e) {

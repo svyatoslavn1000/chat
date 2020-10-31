@@ -11,16 +11,16 @@ import java.util.Vector;
 public class Server {
 
     private final Vector<ClientHandler> clients;
-    AuthService authService;
+    DBService DBService;
 
     public Server() throws SQLException {
         clients = new Vector<>();
         ServerSocket server = null;
         Socket socket = null;
-        this.authService = new AuthService();
+        this.DBService = new DBService();
 
         try {
-            AuthService.connect();
+            DBService.connect();
             server = new ServerSocket(8189);
             System.out.println("Сервер запущен");
 
@@ -43,7 +43,7 @@ public class Server {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            AuthService.disconnect();
+            DBService.disconnect();
         }
     }
 
@@ -75,7 +75,7 @@ public class Server {
     }
 
     public boolean isNickBizy(String nick) throws SQLException {
-        List<String> nicks = authService.getAllNicks();
+        List<String> nicks = DBService.getAllNicks();
         for(String o: nicks){
             if(o.equals(nick)){
                 return true;
