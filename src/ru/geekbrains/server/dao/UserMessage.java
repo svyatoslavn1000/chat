@@ -1,4 +1,4 @@
-package ru.geekbrains.server;
+package ru.geekbrains.server.dao;
 import java.io.Serializable;
 
 public class UserMessage implements Serializable {

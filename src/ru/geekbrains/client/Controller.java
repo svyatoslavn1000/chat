@@ -9,7 +9,6 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import ru.geekbrains.server.UserMessage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

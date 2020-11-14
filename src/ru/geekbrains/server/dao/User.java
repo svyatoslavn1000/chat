@@ -1,9 +1,9 @@
-package ru.geekbrains.server;
+package ru.geekbrains.server.dao;
 
 import java.io.Serializable;
 
 public class User implements Serializable {
-    int id;
+    Integer id;
     String login;
     String password;
     String nick;
@@ -11,7 +11,7 @@ public class User implements Serializable {
     public User() {
     }
 
-    public User(int id, String login, String password, String nick) {
+    public User(Integer id, String login, String password, String nick) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -22,7 +22,7 @@ public class User implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -48,5 +48,25 @@ public class User implements Serializable {
 
     public void setNick(String nick) {
         this.nick = nick;
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        return (other instanceof User) && (id != null)
+                ? id.equals(((User) other).id)
+                : (other == this);
+    }
+
+    @Override
+    public int hashCode() {
+        return (id != null)
+                ? (this.getClass().hashCode() + id.hashCode())
+                : super.hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return String.format("User[id=%d,login=%s,nick=%s]",
+                id, login, nick);
     }
 }

@@ -1,5 +1,10 @@
 package ru.geekbrains.server;
 
+import ru.geekbrains.server.dao.DBService;
+import ru.geekbrains.server.dao.MessageRepository;
+import ru.geekbrains.server.dao.UserMessage;
+import ru.geekbrains.server.dao.UserReposirory;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -15,7 +20,7 @@ public class ClientHandler {
     Server server;
     String nick;
     ArrayList<String> blacklist;
-    DBService DBService;
+    ru.geekbrains.server.dao.DBService DBService;
 
     public String getNick() {
         return nick;
@@ -40,19 +45,19 @@ public class ClientHandler {
                                 System.out.println(tokens[3]);
                                 sendMsg("Ник "  + tokens[3] + " уже используется" );
                             }else{
-                            DBService.addUser(tokens[1],tokens[2],tokens[3]);
+                            UserReposirory.addUser(tokens[1],tokens[2],tokens[3]);
                             sendMsg("Регистрация прошла успешно");}
                         }
                         if (str.startsWith("/auth")) {
                             String[] tokens = str.split(" ");
-                            String newNick = DBService.getNickByLoginAndPass(tokens[1], tokens[2]);
+                            String newNick = UserReposirory.getNickByLoginAndPass(tokens[1], tokens[2]);
                             if (newNick != null) {
                                 if (!server.isNickUsed(newNick)) {
                                     sendMsg("/authok" + " " + newNick);
                                     nick = newNick;
                                     server.subscribe(ClientHandler.this);
                                     server.broadcastMsg(ClientHandler.this, "Пользователь " + nick + " вошел в чат");
-                                    List<UserMessage> messages = DBService.getAllMessages();
+                                    List<UserMessage> messages = MessageRepository.getAllMessages();
                                     for(UserMessage o: messages){
                                         sendMsg(o.getNick() + " : " + o.getMessage());
                                         System.out.println(o.getNick() + " : " + o.getMessage());
@@ -84,7 +89,7 @@ public class ClientHandler {
                             }
                         } else {
                             server.broadcastMsg(ClientHandler.this, nick + " : " + str);
-                            DBService.addMsg(nick, str);
+                            MessageRepository.addMsg(nick, str);
                         }
                     }
                 } catch (IOException | SQLException e) {

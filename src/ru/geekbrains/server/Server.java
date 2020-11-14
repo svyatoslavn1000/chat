@@ -1,5 +1,8 @@
 package ru.geekbrains.server;
 
+import ru.geekbrains.server.dao.DBService;
+import ru.geekbrains.server.dao.UserReposirory;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,7 +14,7 @@ import java.util.Vector;
 public class Server {
 
     private final Vector<ClientHandler> clients;
-    DBService DBService;
+    ru.geekbrains.server.dao.DBService DBService;
 
     public Server() throws SQLException {
         clients = new Vector<>();
@@ -75,7 +78,7 @@ public class Server {
     }
 
     public boolean isNickBizy(String nick) throws SQLException {
-        List<String> nicks = DBService.getAllNicks();
+        List<String> nicks = UserReposirory.getAllNicks();
         for(String o: nicks){
             if(o.equals(nick)){
                 return true;
