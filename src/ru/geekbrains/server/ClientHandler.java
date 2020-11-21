@@ -21,6 +21,7 @@ public class ClientHandler {
     String nick;
     ArrayList<String> blacklist;
     ru.geekbrains.server.dao.DBService DBService;
+    Boolean isAuthorized = false;
 
     public String getNick() {
         return nick;
@@ -37,38 +38,15 @@ public class ClientHandler {
 
             Thread thread = new Thread(() -> {
                 try {
-                    while (true) {
+                    while (!isAuthorized) {
                         String str = in.readUTF();
                         if (str.startsWith("/registration")) {
-                            String[] tokens = str.split(" ", 4);
-                            if(server.isNickBizy(tokens[3])){
-                                System.out.println(tokens[3]);
-                                sendMsg("Ник "  + tokens[3] + " уже используется" );
-                            }else{
-                            UserReposirory.addUser(tokens[1],tokens[2],tokens[3]);
-                            sendMsg("Регистрация прошла успешно");}
+                            registration(str);
                         }
-                        if (str.startsWith("/auth")) {
-                            String[] tokens = str.split(" ");
-                            String newNick = UserReposirory.getNickByLoginAndPass(tokens[1], tokens[2]);
-                            if (newNick != null) {
-                                if (!server.isNickUsed(newNick)) {
-                                    sendMsg("/authok" + " " + newNick);
-                                    nick = newNick;
-                                    server.subscribe(ClientHandler.this);
-                                    server.broadcastMsg(ClientHandler.this, "Пользователь " + nick + " вошел в чат");
-                                    List<UserMessage> messages = MessageRepository.getAllMessages();
-                                    for(UserMessage o: messages){
-                                        sendMsg(o.getNick() + " : " + o.getMessage());
-                                        System.out.println(o.getNick() + " : " + o.getMessage());
-                                    }
-                                    break;
-                                } else {
-                                    sendMsg("Учетная запись " + newNick + " уже используется");
-                                }
-                            } else {
-                                sendMsg("неверный логин/пароль");
-                            }
+                        else if (str.startsWith("/auth")) {
+                            isAuthorized = authorizationOk(str);
+                        }else{
+                            sendMsg("Пожалуйста, авторизуйтесь или пройдите регистрацию.");
                         }
                     }
                     while (true) {
@@ -130,5 +108,41 @@ public class ClientHandler {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void registration(String registrationMessage) throws SQLException {
+        String[] tokens = registrationMessage.split(" ", 4);
+        if(server.isNickBizy(tokens[3])){
+            System.out.println(tokens[3]);
+            sendMsg("Ник "  + tokens[3] + " уже используется" );
+        }else{
+            UserReposirory.addUser(tokens[1],tokens[2],tokens[3]);
+            sendMsg("Регистрация прошла успешно");}
+    }
+
+    private boolean authorizationOk(String authMessage) throws SQLException {
+        String[] tokens = authMessage.split(" ");
+        String newNick = UserReposirory.getNickByLoginAndPass(tokens[1], tokens[2]);
+        if (newNick != null) {
+            if (!server.isNickUsed(newNick)) {
+                sendMsg("/authok" + " " + newNick);
+                nick = newNick;
+                server.subscribe(ClientHandler.this);
+                server.broadcastMsg(ClientHandler.this, "Пользователь " + nick + " вошел в чат");
+                List<UserMessage> messages = MessageRepository.getAllMessages();
+                for(UserMessage o: messages){
+                    sendMsg(o.getNick() + " : " + o.getMessage());
+                    System.out.println(o.getNick() + " : " + o.getMessage());
+                    return true;
+                }
+            } else {
+                sendMsg("Учетная запись " + newNick + " уже используется");
+                return false;
+            }
+        } else {
+            sendMsg("неверный логин/пароль");
+            return false;
+        }
+        return false;
     }
 }
